@@ -1,6 +1,6 @@
 pre_install:
 	curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-	npm i -g serverless
+	sudo npm i -g serverless
 
 install:
 	poetry install
