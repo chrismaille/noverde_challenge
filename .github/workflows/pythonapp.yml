@@ -15,6 +15,9 @@ jobs:
           python-version: 3.7
       - name: Setup Poetry
         uses: Gr1N/setup-poetry@v1
+      - name: Run node dependencies
+        run: |
+          npm install
       - name: GitHub Action for Serverless Framework
         uses: aaronpanch/action-serverless@v1.0.0
       - name: Install dependencies
