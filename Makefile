@@ -5,6 +5,7 @@ pre_install:
 
 install:
 	poetry install
+	npm install
 
 test:
 	poetry run pytest

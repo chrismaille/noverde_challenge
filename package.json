@@ -1,0 +1,15 @@
+{
+  "name": "noverdechallenge",
+  "version": "0.1.0",
+  "description": "Noverde Technical Challenge",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chris Maillefaud",
+  "license": "ISC",
+  "devDependencies": {
+    "serverless-dynamodb-local": "^0.2.39",
+    "serverless-offline": "^5.12.1"
+  }
+}
