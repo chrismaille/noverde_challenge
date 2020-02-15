@@ -1,9 +1,8 @@
 """Stakeholder Policy Base Class."""
 from abc import ABC, abstractmethod
-from decimal import Decimal
 from typing import List, Any
-
 import numpy as np
+import numpy_financial as npf
 
 
 class StakeholderBasePolicy(ABC):
@@ -67,7 +66,7 @@ class StakeholderBasePolicy(ABC):
         :param number_period: Loan Instalments
         :return: float
         """
-        pmt = np.pmt(rate=rate_interest, nper=number_period, pv=present_value)
+        pmt = npf.pmt(rate=rate_interest, nper=number_period, pv=present_value)
         return np.round(pmt, decimals=2) * -1
 
     @classmethod

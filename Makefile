@@ -11,4 +11,4 @@ test:
 	poetry run pytest
 
 ci:
-	poetry run pytest --cov=NoverdeChallenge --black --mypy --pydocstyle --pycodestyle --ignore=node_modules
+	poetry run pytest --cov=noverde_challenge --black --mypy --pydocstyle --pycodestyle --ignore=node_modules
