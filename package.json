@@ -9,6 +9,7 @@
   "author": "Chris Maillefaud",
   "license": "ISC",
   "devDependencies": {
+    "serverless-python-requirements": "^5.0.1",
     "serverless-dynamodb-local": "^0.2.39",
     "serverless-offline": "^5.12.1"
   }

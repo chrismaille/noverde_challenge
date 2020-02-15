@@ -5,26 +5,39 @@ service: noverdechallenge
 provider:
   name: aws
   runtime: python3.7
+  region: us-east-1
+  stage: dev
   environment:
     DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - dynamodb:Query
-          - dynamodb:Scan
-          - dynamodb:GetItem
-          - dynamodb:PutItem
-          - dynamodb:UpdateItem
-          - dynamodb:DeleteItem
-        Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
 functions:
-  hello:
-    handler: NoverdeChallenge/handler.hello
+  hello_get:
+    handler: noverde_challenge/handlers/loan.get
     events:
       - http:
-          path: "/helloworld"
+          path: api/loans/{loan_id}
           method: get
+          integration: lambda
+          request:
+            paths:
+              loan_id: true
+  hello_post:
+    handler: noverde_challenge/handlers/loan.post
+    events:
+      - http:
+          path: api/loans
+          method: post
+          integration: lambda
 
 resources:
   NoverdeLoansTable:
@@ -32,16 +45,31 @@ resources:
     Properties:
       TableName: ${self:provider.environment.DYNAMODB_TABLE}
       AttributeDefinitions:
-        - AttributeName: id
+        - AttributeName: loan_id
           AttributeType: S
+        - AttributeName: cpf
+          AttributeType: S
+        - AttributeName: name
+          AttributeType: S
+        - AttributeName: birthdate
+          AttributeType: S
+        - AttributeName: amount
+          AttributeType: N
+        - AttributeName: terms
+          AttributeType: N
+        - AttributeName: income
+          AttributeType: N
       KeySchema:
-        - AttributeName: id
+        - AttributeName: loan_id
           KeyType: HASH
+        - AttributeName: cpf
+          KeyType: RANGE
       ProvisionedThroughput:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
 
 plugins:
+  - serverless-python-requirements
   - serverless-dynamodb-local
   - serverless-offline
 
@@ -49,3 +77,9 @@ custom:
   dynamodb:
     stages:
       - dev
+    start:
+      migrate: true
+  pythonRequirements:
+    dockerizePip: true
+  serverless-offline:
+    noTimeout: true

@@ -24,6 +24,7 @@ exclude = '''
     | buck-out
     | build
     | dist
+    | node_modules
   )/
 )
 '''
@@ -36,17 +37,27 @@ authors = ["Chris Maillefaud <chrismaillefaud@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
+arrow = "*"
+loguru = "*"
+marshmallow = "*"
+numpy = "*"
+pycpfcnpj = "*"
+pynamodb = "*"
+requests = "*"
 
 [tool.poetry.dev-dependencies]
-pytest = "*"
-pytest-black = "*"
-pytest-pycodestyle = "*"
-pytest-pydocstyle = "*"
-pytest-cov = "*"
-pytest-xdist ="*"
-pytest-mypy = "*"
 black = {version="*",allow-prereleases = true}
 pygments = "*"
+pytest = "*"
+pytest-black = "*"
+pytest-cov = "*"
+pytest-mock = "*"
+pytest-mypy = "*"
+pytest-pycodestyle = "*"
+pytest-pydocstyle = "*"
+pytest-xdist ="*"
+pydevd-pycharm = "*"
+requests-mock = "*"
 
 [build-system]
 requires = ["poetry>=0.12"]
