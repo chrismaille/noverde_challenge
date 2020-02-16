@@ -69,6 +69,19 @@ typed-ast = ">=1.4.0"
 d = ["aiohttp (>=3.3.2)", "aiohttp-cors"]
 
 [[package]]
+category = "dev"
+description = "The AWS SDK for Python"
+name = "boto3"
+optional = false
+python-versions = "*"
+version = "1.12.0"
+
+[package.dependencies]
+botocore = ">=1.15.0,<1.16.0"
+jmespath = ">=0.7.1,<1.0.0"
+s3transfer = ">=0.3.0,<0.4.0"
+
+[[package]]
 category = "main"
 description = "Low-level, data-driven core of boto 3."
 name = "botocore"
@@ -130,6 +143,34 @@ version = "5.0.3"
 toml = ["toml"]
 
 [[package]]
+category = "dev"
+description = "Simple library to encode/decode DNS wire-format packets"
+name = "dnslib"
+optional = false
+python-versions = "*"
+version = "0.9.10"
+
+[[package]]
+category = "dev"
+description = "DNS toolkit"
+name = "dnspython"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+version = "1.16.0"
+
+[package.extras]
+DNSSEC = ["pycryptodome", "ecdsa (>=0.13)"]
+IDNA = ["idna (>=2.1)"]
+
+[[package]]
+category = "dev"
+description = "Pythonic argument parser, that will make you smile"
+name = "docopt"
+optional = false
+python-versions = "*"
+version = "0.6.2"
+
+[[package]]
 category = "main"
 description = "Docutils -- Python Documentation Utilities"
 name = "docutils"
@@ -182,6 +223,55 @@ name = "jmespath"
 optional = false
 python-versions = "*"
 version = "0.9.4"
+
+[[package]]
+category = "dev"
+description = "An easy-to-use test/mocking framework for developing Cloud applications"
+name = "localstack"
+optional = false
+python-versions = "*"
+version = "0.10.7"
+
+[package.dependencies]
+boto3 = ">=1.9.71"
+dnspython = "1.16.0"
+docopt = ">=0.6.2"
+localstack-client = ">=0.14"
+localstack-ext = ">=0.10.51"
+requests = ">=2.20.0"
+six = ">=1.12.0"
+subprocess32 = "3.5.4"
+
+[package.extras]
+full = ["airspeed (0.5.10)", "amazon_kclpy-ext (1.5.1)", "aws-sam-translator (>=1.15.1)", "awscli (>=1.14.18)", "boto (>=2.49.0)", "botocore (>=1.12.13)", "cachetools (3.1.1)", "coverage (4.5.4)", "elasticsearch (>=6.0.0,<7.0.0)", "flask (1.0.2)", "flask-cors (3.0.3)", "flask_swagger (0.2.12)", "forbiddenfruit (0.1.3)", "jsonpatch (1.24)", "jsonpath-rw (1.4.0)", "localstack-ext (>=0.10.51)", "moto-ext (>=1.3.15.3)", "nose (>=1.3.7)", "nose-timer (>=0.7.5)", "psutil (5.4.8)", "pympler (>=0.6)", "pyopenssl (17.5.0)", "python-coveralls (>=2.9.1)", "pyyaml (>=3.13,<=5.1)", "requests-aws4auth (0.9)", "xmltodict (>=0.11.0)"]
+
+[[package]]
+category = "dev"
+description = "A lightweight Python client for LocalStack."
+name = "localstack-client"
+optional = false
+python-versions = "*"
+version = "0.18"
+
+[package.dependencies]
+boto3 = "*"
+
+[[package]]
+category = "dev"
+description = "Extensions for LocalStack"
+name = "localstack-ext"
+optional = false
+python-versions = "*"
+version = "0.10.108"
+
+[package.dependencies]
+dnslib = "0.9.10"
+dnspython = "1.16.0"
+pyaes = "1.6.0"
+requests = ">=2.20.0"
+
+[package.extras]
+full = ["graphql-core (>=3a)", "hbmqtt (>=0.9.5)", "kubernetes (>=10.0.1)", "pg8000 (>=1.10)", "presto-python-client (>=0.7.0)", "PyJWT (>=1.7.0)", "rsa (>=4.0)", "srp-ext (1.0.7.1)", "testing.common.database (>=1.1.0)", "warrant-ext (>=0.2.0.5)", "websockets (>=8.1)", "Whoosh (>=2.7.4)"]
 
 [[package]]
 category = "main"
@@ -308,6 +398,14 @@ name = "py"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "1.8.1"
+
+[[package]]
+category = "dev"
+description = "Pure-Python Implementation of the AES block-cipher and common modes of operation"
+name = "pyaes"
+optional = false
+python-versions = "*"
+version = "1.6.0"
 
 [[package]]
 category = "dev"
@@ -572,6 +670,17 @@ fixture = ["fixtures"]
 test = ["fixtures", "mock", "purl", "pytest", "sphinx", "testrepository (>=0.0.18)", "testtools"]
 
 [[package]]
+category = "dev"
+description = "An Amazon S3 Transfer Manager"
+name = "s3transfer"
+optional = false
+python-versions = "*"
+version = "0.3.3"
+
+[package.dependencies]
+botocore = ">=1.12.36,<2.0a.0"
+
+[[package]]
 category = "main"
 description = "Python client for Sentry (https://getsentry.com)"
 name = "sentry-sdk"
@@ -612,6 +721,14 @@ name = "snowballstemmer"
 optional = false
 python-versions = "*"
 version = "2.0.0"
+
+[[package]]
+category = "dev"
+description = "A backport of the subprocess module from Python 3 for use on 2.x."
+name = "subprocess32"
+optional = false
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*, <4"
+version = "3.5.4"
 
 [[package]]
 category = "dev"
@@ -693,7 +810,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools"]
 
 [metadata]
-content-hash = "51b92be177e5698f8be740994b967ef5fe71e56a063a87d53f675b55c955c900"
+content-hash = "4f6e482752bedb8594d9dc229d8aab65fc2b6ff6db92eb80091c45d6b3ae1a7a"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -720,6 +837,10 @@ attrs = [
 black = [
     {file = "black-19.10b0-py36-none-any.whl", hash = "sha256:1b30e59be925fafc1ee4565e5e08abef6b03fe455102883820fe5ee2e4734e0b"},
     {file = "black-19.10b0.tar.gz", hash = "sha256:c2edb73a08e9e0e6f65a0e6af18b059b8b1cdd5bef997d7a0b181df93dc81539"},
+]
+boto3 = [
+    {file = "boto3-1.12.0-py2.py3-none-any.whl", hash = "sha256:34f9a04f529dc849f0e427782d6f3c6b62f7fb734d8f4859b17e5dee0855323e"},
+    {file = "boto3-1.12.0.tar.gz", hash = "sha256:33462a79d57c9c4a215e075472509537d03545f54566fc4f776fb0f4cfa616f6"},
 ]
 botocore = [
     {file = "botocore-1.15.0-py2.py3-none-any.whl", hash = "sha256:1f7cecfcd38c7cac17b5386014eb04626d1c7559ee8d8ec1526058cd23f6d1d4"},
@@ -774,6 +895,16 @@ coverage = [
     {file = "coverage-5.0.3-cp39-cp39m-win_amd64.whl", hash = "sha256:da93027835164b8223e8e5af2cf902a4c80ed93cb0909417234f4a9df3bcd9af"},
     {file = "coverage-5.0.3.tar.gz", hash = "sha256:77afca04240c40450c331fa796b3eab6f1e15c5ecf8bf2b8bee9706cd5452fef"},
 ]
+dnslib = [
+    {file = "dnslib-0.9.10.tar.gz", hash = "sha256:666bf55274a630a2925411c4ea9ca724529299bbe70f91979ad99c72c5e5099e"},
+]
+dnspython = [
+    {file = "dnspython-1.16.0-py2.py3-none-any.whl", hash = "sha256:f69c21288a962f4da86e56c4905b49d11aba7938d3d740e80d9e366ee4f1632d"},
+    {file = "dnspython-1.16.0.zip", hash = "sha256:36c5e8e38d4369a08b6780b7f27d790a292b2b08eea01607865bf0936c558e01"},
+]
+docopt = [
+    {file = "docopt-0.6.2.tar.gz", hash = "sha256:49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"},
+]
 docutils = [
     {file = "docutils-0.15.2-py2-none-any.whl", hash = "sha256:9e4d7ecfc600058e07ba661411a2b7de2fd0fafa17d1a7f7361cd47b1175c827"},
     {file = "docutils-0.15.2-py3-none-any.whl", hash = "sha256:6c4f696463b79f1fb8ba0c594b63840ebd41f059e92b31957c46b74a4599b6d0"},
@@ -794,6 +925,15 @@ importlib-metadata = [
 jmespath = [
     {file = "jmespath-0.9.4-py2.py3-none-any.whl", hash = "sha256:3720a4b1bd659dd2eecad0666459b9788813e032b83e7ba58578e48254e0a0e6"},
     {file = "jmespath-0.9.4.tar.gz", hash = "sha256:bde2aef6f44302dfb30320115b17d030798de8c4110e28d5cf6cf91a7a31074c"},
+]
+localstack = [
+    {file = "localstack-0.10.7.tar.gz", hash = "sha256:a7182ce666ce0ab26f3753076008df420282276e8c4fae580806d4da9b0578ba"},
+]
+localstack-client = [
+    {file = "localstack-client-0.18.tar.gz", hash = "sha256:7054516673c0188679252c0c7412efee970bac5799bae3ce051cd50a01a22d75"},
+]
+localstack-ext = [
+    {file = "localstack-ext-0.10.108.tar.gz", hash = "sha256:e39b7439f7d4ca269541bbb8a616f4b972f5502caa1e06f5356faaaef81eb4a3"},
 ]
 loguru = [
     {file = "loguru-0.4.1-py3-none-any.whl", hash = "sha256:074b3caa6748452c1e4f2b302093c94b65d5a4c5a4d7743636b4121e06437b0e"},
@@ -869,6 +1009,9 @@ pluggy = [
 py = [
     {file = "py-1.8.1-py2.py3-none-any.whl", hash = "sha256:c20fdd83a5dbc0af9efd622bee9a5564e278f6380fffcacc43ba6f43db2813b0"},
     {file = "py-1.8.1.tar.gz", hash = "sha256:5e27081401262157467ad6e7f851b7aa402c5852dbcb3dae06768434de5752aa"},
+]
+pyaes = [
+    {file = "pyaes-1.6.0.tar.gz", hash = "sha256:9cd5a54d914b1eebfb14fcb490315214b6a0304d9f1bb47e90d1d8e0b15ce92e"},
 ]
 pycodestyle = [
     {file = "pycodestyle-2.5.0-py2.py3-none-any.whl", hash = "sha256:95a2219d12372f05704562a14ec30bc76b05a5b297b21a5dfe3f6fac3491ae56"},
@@ -961,6 +1104,10 @@ requests-mock = [
     {file = "requests-mock-1.7.0.tar.gz", hash = "sha256:88d3402dd8b3c69a9e4f9d3a73ad11b15920c6efd36bc27bf1f701cf4a8e4646"},
     {file = "requests_mock-1.7.0-py2.py3-none-any.whl", hash = "sha256:510df890afe08d36eca5bb16b4aa6308a6f85e3159ad3013bac8b9de7bd5a010"},
 ]
+s3transfer = [
+    {file = "s3transfer-0.3.3-py2.py3-none-any.whl", hash = "sha256:2482b4259524933a022d59da830f51bd746db62f047d6eb213f2f8855dcb8a13"},
+    {file = "s3transfer-0.3.3.tar.gz", hash = "sha256:921a37e2aefc64145e7b73d50c71bb4f26f46e4c9f414dc648c6245ff92cf7db"},
+]
 sentry-sdk = [
     {file = "sentry-sdk-0.14.1.tar.gz", hash = "sha256:e023da07cfbead3868e1e2ba994160517885a32dfd994fc455b118e37989479b"},
     {file = "sentry_sdk-0.14.1-py2.py3-none-any.whl", hash = "sha256:b06dd27391fd11fb32f84fe054e6a64736c469514a718a99fb5ce1dff95d6b28"},
@@ -972,6 +1119,10 @@ six = [
 snowballstemmer = [
     {file = "snowballstemmer-2.0.0-py2.py3-none-any.whl", hash = "sha256:209f257d7533fdb3cb73bdbd24f436239ca3b2fa67d56f6ff88e86be08cc5ef0"},
     {file = "snowballstemmer-2.0.0.tar.gz", hash = "sha256:df3bac3df4c2c01363f3dd2cfa78cce2840a79b9f1c2d2de9ce8d31683992f52"},
+]
+subprocess32 = [
+    {file = "subprocess32-3.5.4-cp27-cp27m-macosx_10_6_intel.whl", hash = "sha256:88e37c1aac5388df41cc8a8456bb49ebffd321a3ad4d70358e3518176de3a56b"},
+    {file = "subprocess32-3.5.4.tar.gz", hash = "sha256:eb2937c80497978d181efa1b839ec2d9622cf9600a039a79d0e108d1f9aec79d"},
 ]
 toml = [
     {file = "toml-0.10.0-py2.7.egg", hash = "sha256:f1db651f9657708513243e61e6cc67d101a39bad662eaa9b5546f789338e07a3"},

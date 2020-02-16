@@ -49,6 +49,7 @@ validate-docbr = "*"
 
 [tool.poetry.dev-dependencies]
 black = {version="*",allow-prereleases = true}
+localstack = "*"
 # ptvsd = "*"  # VSCode remote debug extension
 pygments = "*"
 pytest = "*"
