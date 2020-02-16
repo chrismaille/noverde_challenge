@@ -4,7 +4,7 @@
   "description": "Noverde Technical Challenge",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"No tests need in JS\" && exit 0"
+    "test": "poetry --version && exit 0"
   },
   "author": "Chris Maillefaud",
   "license": "ISC",
