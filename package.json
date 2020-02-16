@@ -4,7 +4,7 @@
   "description": "Noverde Technical Challenge",
   "main": "index.js",
   "scripts": {
-    "test": "poetry --version && exit 0"
+    "test": "make pre_install"
   },
   "author": "Chris Maillefaud",
   "license": "ISC",
