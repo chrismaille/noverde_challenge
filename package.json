@@ -4,7 +4,10 @@
   "description": "Noverde Technical Challenge",
   "main": "index.js",
   "scripts": {
-    "test": "pip install poetry"
+    "install:python": "make pre_install && make install",
+    "install": "npm run install:python && npm install",
+    "test:python": "make ci",
+    "test": "npm run test:python"
   },
   "author": "Chris Maillefaud",
   "license": "ISC",
