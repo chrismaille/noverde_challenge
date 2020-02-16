@@ -3,7 +3,7 @@ pre_install:
 	sudo npm i -g serverless
 
 install:
-	python install
+	poetry install
 	npm install
 
 test:
@@ -11,7 +11,3 @@ test:
 
 ci:
 	poetry run pytest --cov=noverde_challenge --black --mypy --pydocstyle --pycodestyle --ignore=node_modules
-
-serverless_pre_install:
-	pip install --user poetry
-	touch requirements.txt

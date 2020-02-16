@@ -9,9 +9,9 @@ provider:
   stage: ${opt:stage, 'dev'}
   environment:
     DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
-    SENTRY_DSN: ${env:NOVERDE_SENTRY_DSN}
+    SENTRY_DSN: ${param:NOVERDE_SENTRY_DSN}
     SENTRY_ENV: ${self:provider.stage}
-    NOVERDE_API_TOKEN: ${env:NOVERDE_API_TOKEN}
+    NOVERDE_API_TOKEN: ${param:NOVERDE_API_TOKEN}
   iamRoleStatements:
     - Effect: Allow
       Action:
