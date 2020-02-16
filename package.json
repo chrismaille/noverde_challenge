@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "install:python": "make pre_install && make install",
-    "install": "npm run install:python && npm install",
     "test:python": "make ci",
-    "test": "npm run test:python"
+    "test": "npm run install:python && npm run test:python"
   },
   "author": "Chris Maillefaud",
   "license": "ISC",

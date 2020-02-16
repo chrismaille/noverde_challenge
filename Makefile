@@ -1,7 +1,5 @@
 pre_install:
-	pip install -U --user pip
 	pip install -U --user poetry
-	sudo npm i -g serverless
 	touch requirements.txt
 
 install:
