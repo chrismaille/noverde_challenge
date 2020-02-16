@@ -42,12 +42,14 @@ loguru = "*"
 marshmallow = "*"
 numpy = "*"
 numpy_financial = "*"
-pycpfcnpj = "*"
 pynamodb = "*"
 requests = "*"
+sentry-sdk = "*"
+validate-docbr = "*"
 
 [tool.poetry.dev-dependencies]
 black = {version="*",allow-prereleases = true}
+# ptvsd = "*"  # VSCode remote debug extension
 pygments = "*"
 pytest = "*"
 pytest-black = "*"

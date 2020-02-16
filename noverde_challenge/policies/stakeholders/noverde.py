@@ -1,6 +1,6 @@
 """Noverde Policy Class."""
 from dataclasses import dataclass, field
-from typing import Any, Dict, Union
+from typing import Dict, Union
 
 import arrow
 import requests
@@ -24,7 +24,7 @@ class NoverdePolicy(StakeholderBasePolicy):
     loan: LoanModel
 
     request_base_url = "https://challenge.noverde.name/"
-    request_timeout: int = 20
+    request_timeout: int = 5
 
     policy_results: Dict[str, bool] = field(default_factory=dict)
 
@@ -90,14 +90,14 @@ class NoverdePolicy(StakeholderBasePolicy):
 
         Current Rule:
             * Calculated PMT must be equal or
-                less than commitment-free value
+                less than commitment-free value (CFV)
 
         Example:
             Borrower Income: 1000.00
             Borrower commitment rate: 0.8
             Borrower commitment-free value: 1000 * (1 - 0.8) = 200.0
-            PMT 150.00 -> True
-            PMT 400.00 -> False
+            PMT 150.00 <= CFV 200.00 -> True
+            PMT 400.00 <= CFV 200.00 -> False
 
         :param pmt: calculated PMT for Borrower
         :return: Boolean

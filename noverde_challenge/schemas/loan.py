@@ -7,11 +7,12 @@ from typing import Type
 import arrow
 from loguru import logger
 from marshmallow import Schema, ValidationError, fields, post_load, validates
-from pycpfcnpj import cpfcnpj
+from validate_docbr import CPF
 
 from noverde_challenge.models.loan import LoanModel
 from noverde_challenge.policies.stakeholders import StakeholderBasePolicy
 from noverde_challenge.policies.stakeholders.noverde import NoverdePolicy
+from noverde_challenge.utils.helpers import only_numbers
 
 
 class LoanModelSchema(Schema):
@@ -40,11 +41,22 @@ class LoanModelSchema(Schema):
 
     loan_id = fields.UUID(missing=uuid.uuid4)
     name = fields.String(required=True)
-    cpf = fields.String(required=True, validate=cpfcnpj.validate)
+    cpf = fields.String(required=True)
     birthdate = fields.String(required=True)
     amount = fields.Float(required=True)
     terms = fields.Integer(required=True)
     income = fields.Float(required=True)
+
+    @validates("cpf")
+    def validate_cpf(self, value: str) -> None:
+        """Validate CPF number.
+
+        :param value: cpf value from request.
+        :return: None
+        """
+        cpf = CPF()
+        if not cpf.validate(value):
+            raise ValidationError("Invalid CPF number.")
 
     @validates("amount")
     def validate_amount(self, value: float) -> None:
@@ -58,8 +70,7 @@ class LoanModelSchema(Schema):
             raise ValidationError(
                 f"Amount must be between {self.policy_class.minimum_amount} "
                 f"and {self.policy_class.maximum_amount}. "
-                f"Current: {value}",
-                "amount",
+                f"Current: {value}"
             )
 
     @validates("terms")
@@ -72,7 +83,7 @@ class LoanModelSchema(Schema):
         """
         if not self.policy_class.run_terms_policy(value):
             raise ValidationError(
-                f"Terms must be one of {self.policy_class.valid_terms}.", "terms"
+                f"Terms must be one of {self.policy_class.valid_terms}."
             )
 
     @validates("birthdate")
@@ -86,9 +97,9 @@ class LoanModelSchema(Schema):
         try:
             date = arrow.get(value, "YYYY-MM-DD")
             if date >= arrow.utcnow():
-                raise ValidationError("Date must be lower than today", "birthdate")
+                raise ValidationError("Date must be lower than today")
         except ParserError:
-            raise ValidationError("Date must be in format YYYY-MM-DD", "birthdate")
+            raise ValidationError("Date must be in format YYYY-MM-DD")
 
 
 class CreateLoanModelSchema(LoanModelSchema):
@@ -104,6 +115,7 @@ class CreateLoanModelSchema(LoanModelSchema):
                 read_capacity_units=1, write_capacity_units=1, wait=True
             )
         data["loan_id"] = data["loan_id"].hex
+        data["cpf"] = only_numbers(data["cpf"])
         loan = LoanModel(**data)
         loan.save()
         return loan

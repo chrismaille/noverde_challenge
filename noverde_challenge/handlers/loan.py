@@ -7,11 +7,11 @@ from pynamodb.exceptions import DoesNotExist
 
 from noverde_challenge.models.loan import LoanModel
 from noverde_challenge.schemas.loan import CreateLoanModelSchema, LoanModelSchema
-from noverde_challenge.utils.handler import handler_config
+from noverde_challenge.utils.handler import handler_view
 from noverde_challenge.utils.status_code import StatusCode
 
 
-@handler_config()
+@handler_view()
 def get(event: Dict[str, Any], context: object) -> Dict[str, object]:
     """Loan Get Handler.
 
@@ -20,7 +20,7 @@ def get(event: Dict[str, Any], context: object) -> Dict[str, object]:
     :param context: Serverless Context instance
     :return: Dict
     """
-    loan_id = event["path"]["loan_id"]
+    loan_id = event["pathParameters"]["loan_id"]
     logger.info(f"Start Retrieve Loan handler for id {loan_id}")
     try:
         loan = LoanModel.get(hash_key=loan_id)
@@ -36,7 +36,7 @@ def get(event: Dict[str, Any], context: object) -> Dict[str, object]:
     return response
 
 
-@handler_config(model_schema=CreateLoanModelSchema)
+@handler_view(model_schema=CreateLoanModelSchema)
 def post(event: Dict[str, Any], context: object, loan: LoanModel) -> Dict[str, object]:
     """Loan Post Handler.
 

@@ -226,6 +226,7 @@ dist
 
 # Serverless directories
 .serverless/
+requirements.txt
 
 # FuseBox cache
 .fusebox/

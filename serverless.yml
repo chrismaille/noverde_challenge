@@ -6,9 +6,12 @@ provider:
   name: aws
   runtime: python3.7
   region: us-east-1
-  stage: dev
+  stage: ${opt:stage, 'dev'}
   environment:
     DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    SENTRY_DSN: ${env:NOVERDE_SENTRY_DSN}
+    SENTRY_ENV: ${self:provider.stage}
+    NOVERDE_API_TOKEN: ${env:NOVERDE_API_TOKEN}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -19,54 +22,44 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+  tracing:
+    apiGateway: true
+    lambda: true
 
 functions:
-  hello_get:
+  loans_get:
     handler: noverde_challenge/handlers/loan.get
     events:
       - http:
           path: api/loans/{loan_id}
           method: get
-          integration: lambda
+          cors: true
           request:
             paths:
               loan_id: true
-  hello_post:
+  loans_post:
     handler: noverde_challenge/handlers/loan.post
     events:
       - http:
           path: api/loans
           method: post
-          integration: lambda
+          cors: true
 
 resources:
-  NoverdeLoansTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: ${self:provider.environment.DYNAMODB_TABLE}
-      AttributeDefinitions:
-        - AttributeName: loan_id
-          AttributeType: S
-        - AttributeName: cpf
-          AttributeType: S
-        - AttributeName: name
-          AttributeType: S
-        - AttributeName: birthdate
-          AttributeType: S
-        - AttributeName: amount
-          AttributeType: N
-        - AttributeName: terms
-          AttributeType: N
-        - AttributeName: income
-          AttributeType: N
-      KeySchema:
-        - AttributeName: loan_id
-          KeyType: HASH
-        - AttributeName: cpf
-          KeyType: RANGE
-      ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
+  Resources:
+    NoverdeChallengeDB:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        AttributeDefinitions:
+          - AttributeName: loan_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: loan_id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
 
 plugins:
   - serverless-python-requirements
@@ -80,6 +73,6 @@ custom:
     start:
       migrate: true
   pythonRequirements:
-    dockerizePip: true
+    dockerizePip: non-linux
   serverless-offline:
     noTimeout: true

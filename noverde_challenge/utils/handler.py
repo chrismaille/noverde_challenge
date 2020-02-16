@@ -5,11 +5,12 @@ from typing import Optional, Type
 
 from loguru import logger
 from marshmallow import Schema, ValidationError
+from sentry_sdk import capture_exception  # type: ignore
 
 from noverde_challenge.utils.status_code import StatusCode
 
 
-def handler_config(model_schema: Optional[Type[Schema]] = None):
+def handler_view(model_schema: Optional[Type[Schema]] = None):
     """Configure Handler Decorator.
 
     This decorator will config the handler for the following options:
@@ -36,9 +37,10 @@ def handler_config(model_schema: Optional[Type[Schema]] = None):
             try:
                 # Get Body data
                 event = args[0]
-                raw_data = event.get("body")
+                body = event.get("body")
+                raw_data = json.loads(body) if body else None
 
-                # Create or update Loan
+                # Create Loan object
                 if raw_data and model_schema:
                     logger.debug("Start creating loan...")
                     loan = model_schema().load(raw_data)
@@ -66,7 +68,7 @@ def handler_config(model_schema: Optional[Type[Schema]] = None):
                 }
             except Exception as error:
                 # Handle Internal Server Errors
-                # Good place for sentry.capture_exception()
+                capture_exception(error)
                 logger.error(f"Internal Error during request: {error}")
                 return {
                     "statusCode": StatusCode.INTERNAL_ERROR.value,

@@ -1,5 +1,4 @@
 from copy import deepcopy
-from decimal import Decimal
 
 import arrow
 import pytest
