@@ -3,11 +3,11 @@ pre_install:
 	touch requirements.txt
 
 install:
-	poetry install
+	python -m poetry install
 	npm install
 
 test:
 	poetry run pytest
 
 ci:
-	poetry run pytest --cov=noverde_challenge --black --mypy --pydocstyle --pycodestyle --ignore=node_modules
+	python -m poetry run pytest --cov=noverde_challenge --black --mypy --pydocstyle --pycodestyle --ignore=node_modules
