@@ -4,9 +4,8 @@
   "description": "Noverde Technical Challenge",
   "main": "index.js",
   "scripts": {
-    "install:python": "make pre_install && make install",
-    "test:python": "make ci",
-    "test": "npm run install:python && npm run test:python"
+    "install:serverless": "make serverless_pre_install",
+    "test": "npm run install:serverless"
   },
   "author": "Chris Maillefaud",
   "license": "ISC",
