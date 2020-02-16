@@ -4,7 +4,7 @@
   "description": "Noverde Technical Challenge",
   "main": "index.js",
   "scripts": {
-    "test": "make pre_install"
+    "test": "pip install poetry"
   },
   "author": "Chris Maillefaud",
   "license": "ISC",
