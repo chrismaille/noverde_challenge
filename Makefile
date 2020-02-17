@@ -3,8 +3,8 @@ pre_install:
 	sudo npm i -g serverless
 
 install:
-	poetry install
 	npm install
+	poetry install
 
 test:
 	poetry run pytest
@@ -12,6 +12,5 @@ test:
 ci:
 	poetry run pytest --cov=noverde_challenge --black --mypy --pydocstyle --pycodestyle --ignore=node_modules
 
-serverless_deploy:
+serverless_pre_install:
 	poetry export --without-hashes -f requirements.txt -o requirements.txt
-	SERVERLESS_ACCESS_KEY=${SERVERLESS_ACCESS_KEY} serverless deploy

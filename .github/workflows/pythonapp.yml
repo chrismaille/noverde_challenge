@@ -17,19 +17,16 @@ jobs:
           python-version: 3.7
       - name: Setup Poetry
         uses: Gr1N/setup-poetry@v1
-      - name: Install Node dependencies
-        run: |
-          npm install
-      - name: Install Python dependencies
+      - name: Install Python and Node dependencies
         run: |
           make install
       - name: Run CI Tests
         run: |
           make ci
-      - name: GitHub Action for Serverless Framework
-        uses: aaronpanch/action-serverless@v1.0.0
-      - name: Run Serverless Deploy
+      - name: Prepare Deploy
         run: |
-          make serverless_deploy
+          make serverless_pre_install
+      - name: Run Serverless Deploy
+        uses: dschep/serverless-python-action
         env:
           SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
