@@ -1,4 +1,12 @@
-"""Loan Model Module."""
+"""Loan Model Module.
+
+For this challenge, we will use a
+DynamoDb table with a very simple organization.
+
+For production settings please check:
+https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-general-nosql-design.html
+
+"""
 import os
 from enum import Enum, unique
 
@@ -7,8 +15,8 @@ from pynamodb.models import Model
 
 
 @unique
-class LoanStatus(Enum):
-    """Loan Status."""
+class LoanAnalysisStatus(Enum):
+    """Loan Analysis Status."""
 
     PROCESSING = "processing"
     COMPLETED = "completed"
@@ -16,11 +24,20 @@ class LoanStatus(Enum):
 
 
 @unique
-class LoanAnalysisStatus(Enum):
-    """Loan Analysis Status."""
+class LoanAnalysisResult(Enum):
+    """Loan Analysis Result."""
 
     APPROVED = "approved"
     REFUSED = "refused"
+
+
+@unique
+class LoanRefusedPolicy(Enum):
+    """Loan Refused Policy."""
+
+    AGE = "age"
+    SCORE = "score"
+    COMMITMENT = "commitment"
 
 
 class LoanModel(Model):
@@ -35,6 +52,12 @@ class LoanModel(Model):
         * income (number): Borrower income
         * name (string): Borrower name
 
+        * status (LoanAnalysisStatus): Loan Analysis status
+        * result (LoanAnalysisResult): Loan Analysis result
+        * refused_policy (LoanRefusedPolicy): Loan Refused Policy
+        * allowed_amount (number): allowed amount after analysis
+        * allowed_terms (number): allowed terms after analysis
+
     """
 
     loan_id = UnicodeAttribute(hash_key=True)
@@ -45,7 +68,7 @@ class LoanModel(Model):
     terms = NumberAttribute()
     income = NumberAttribute()
 
-    status = UnicodeAttribute(default=LoanStatus.PROCESSING.value)
+    status = UnicodeAttribute(default=LoanAnalysisStatus.PROCESSING.value)
     result = UnicodeAttribute(null=True)
     refused_policy = UnicodeAttribute(null=True)
     allowed_amount = NumberAttribute(null=True)

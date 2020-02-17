@@ -1,4 +1,12 @@
-"""Handler View Config Decorator."""
+"""Handler View Config Decorator.
+
+For this challenge every lambda will
+running Python.
+
+In production settings, its easier to develop when:
+* Running API lambdas in ES6 or Typescript
+* Running Step Functions in Python
+"""
 import json
 from functools import wraps
 from typing import Optional, Type
