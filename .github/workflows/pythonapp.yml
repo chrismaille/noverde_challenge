@@ -28,10 +28,6 @@ jobs:
           make ci
       - name: Prepare Deploy
         run: |
-          make serverless_pre_install
-      - name: Deploy Serverless
-        uses: serverless/github-action@v1.53.0
-        with:
-          args: deploy
+          make serverless_deploy
         env:
           SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}

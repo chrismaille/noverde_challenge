@@ -12,5 +12,6 @@ test:
 ci:
 	poetry run pytest --cov=noverde_challenge --black --mypy --pydocstyle --pycodestyle --ignore=node_modules
 
-serverless_pre_install:
+serverless_deploy:
 	poetry export --without-hashes -f requirements.txt -o requirements.txt
+	SERVERLESS_ACCESS_KEY=${SERVERLESS_ACCESS_KEY} serverless deploy
