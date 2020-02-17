@@ -108,9 +108,9 @@ def test_run_commitment_policy(
     mocker.patch.object(NoverdePolicy, "request_score", return_value=600)
     mocker.patch.object(NoverdePolicy, "request_commitment", return_value=commitment)
 
-    from noverde_challenge.utils.rates import pd
+    from noverde_challenge.utils.rates import pandas
 
-    mocker.patch.object(pd, "read_csv", return_value=test_rate_model)
+    mocker.patch.object(pandas, "read_csv", return_value=test_rate_model)
 
     event = {"loan_id": loan_model.loan_id}
     ret = run_commitment_policy(event, {})

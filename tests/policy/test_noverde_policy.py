@@ -70,7 +70,7 @@ def test_terms_policy(loan_model, value, result):
 )
 def test_commitment_policy(loan_model, value, result, mocker, test_rate_model):
     from noverde_challenge.policies.stakeholders.noverde import NoverdePolicy
-    from noverde_challenge.utils.rates import pd
+    from noverde_challenge.utils.rates import pandas
     from noverde_challenge.models.loan import LoanModel
 
     test_model = deepcopy(loan_model)
@@ -78,7 +78,7 @@ def test_commitment_policy(loan_model, value, result, mocker, test_rate_model):
 
     mocker.patch.object(NoverdePolicy, "request_score", return_value=value)
     mocker.patch.object(NoverdePolicy, "request_commitment", return_value=0.8)
-    mocker.patch.object(pd, "read_csv", return_value=test_rate_model)
+    mocker.patch.object(pandas, "read_csv", return_value=test_rate_model)
     mocker.patch.object(LoanModel, "get", return_value=test_model)
     mocker.patch.object(LoanModel, "save")
 

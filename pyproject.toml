@@ -38,6 +38,7 @@ authors = ["Chris Maillefaud <chrismaillefaud@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.7"
 arrow = "*"
+boto3 = "*"
 loguru = "*"
 marshmallow = "*"
 numpy = "*"
@@ -50,8 +51,6 @@ validate-docbr = "*"
 
 [tool.poetry.dev-dependencies]
 black = {version="*",allow-prereleases = true}
-localstack = "*"
-moto = "*"
 poetry = "*"
 # ptvsd = "*"  # VSCode remote debug extension
 pygments = "*"
@@ -65,7 +64,6 @@ pytest-pydocstyle = "*"
 pytest-xdist ="*"
 pydevd-pycharm = "*"
 requests-mock = "*"
-cffi = "^1.14.0"
 
 [build-system]
 requires = ["poetry>=0.12"]

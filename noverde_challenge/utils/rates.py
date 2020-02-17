@@ -22,7 +22,7 @@ def get_rates(
     # %%
     import os
     from pathlib import Path
-    import pandas as pd
+    import pandas
 
     # Uncomment in scientific mode for tests
     # csv = "noverde_rate_model"
@@ -31,7 +31,7 @@ def get_rates(
     data_frame_path = Path().joinpath(
         current_dir, "noverde_challenge", "policies", "data", f"{csv}.csv",
     )
-    df = pd.read_csv(data_frame_path)
+    df = pandas.read_csv(data_frame_path)
     df.set_index("score", inplace=True)
     # %%
     # Uncomment in scientific mode for tests
