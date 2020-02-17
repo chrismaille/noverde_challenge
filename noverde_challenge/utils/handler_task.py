@@ -4,7 +4,12 @@ from functools import wraps
 from loguru import logger
 from sentry_sdk import capture_exception  # type: ignore
 
-from noverde_challenge.models.loan import (LoanAnalysisResult, LoanAnalysisStatus, LoanModel, LoanRefusedPolicy)
+from noverde_challenge.models.loan import (
+    LoanAnalysisResult,
+    LoanAnalysisStatus,
+    LoanModel,
+    LoanRefusedPolicy,
+)
 from noverde_challenge.policies.stakeholders.noverde import NoverdePolicy
 
 

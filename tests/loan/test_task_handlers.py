@@ -3,7 +3,11 @@ from copy import deepcopy
 import arrow
 import pytest
 
-from noverde_challenge.handlers.analysis import (run_age_policy, run_commitment_policy, run_score_policy)
+from noverde_challenge.handlers.analysis import (
+    run_age_policy,
+    run_commitment_policy,
+    run_score_policy,
+)
 from noverde_challenge.models.loan import LoanAnalysisResult, LoanAnalysisStatus
 from noverde_challenge.policies.stakeholders.noverde import NoverdePolicy
 from noverde_challenge.utils.handler_task import LoanModel
