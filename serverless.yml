@@ -5,9 +5,8 @@ service: noverdechallenge
 provider:
   name: aws
   runtime: python3.7
-  region: us-east-1
+  region: ${opt:region, 'us-east-1'}
   stage: ${opt:stage, 'dev'}
-  cfnRole: ${param:CFN_ROLE}
   environment:
     DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
     SENTRY_DSN: ${param:NOVERDE_SENTRY_DSN}
