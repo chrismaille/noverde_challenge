@@ -26,7 +26,9 @@ jobs:
       - name: Run CI Tests
         run: |
           make ci
-      - name: Prepare Deploy
+      - name: GitHub Action for Serverless Framework
+        uses: aaronpanch/action-serverless@v1.0.0
+      - name: Run Serverless Deploy
         run: |
           make serverless_deploy
         env:
