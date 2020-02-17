@@ -4,14 +4,16 @@
   "description": "Noverde Technical Challenge",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"No tests need\""
+    "test": "echo \"No js tests need\""
   },
   "author": "Chris Maillefaud",
   "license": "ISC",
   "devDependencies": {
     "serverless-dynamodb-local": "^0.2.39",
     "serverless-offline": "^5.12.1",
+    "serverless-pseudo-parameters": "^2.5.0",
     "serverless-python-requirements": "^5.0.1",
-    "serverless-step-functions": "^2.17.1"
+    "serverless-step-functions": "^2.17.1",
+    "serverless-step-functions-offline": "^2.1.4"
   }
 }

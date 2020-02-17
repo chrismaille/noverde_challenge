@@ -56,8 +56,9 @@ def test_get_not_found(mocker):
         ("cpf", "1234", "cpf: Invalid CPF number."),
         ("amount", 15000, "Amount must be between"),
         ("birthdate", None, "birthdate: Field may not be null"),
+        ("birthdate", "2099-01-01", "birthdate: Date must be lower than today"),
     ],
-    ids=["Bad Terms", "Bad CPF", "Bad Amount", "Missing Birthday"],
+    ids=["Bad Terms", "Bad CPF", "Bad Amount", "Missing Birthday", "Bad Birthday"],
 )
 def test_invalid_post(field, value, error_message):
     bad_dog = deepcopy(good_dog)

@@ -1,8 +1,11 @@
 """Stakeholder Policy Base Class."""
 from abc import ABC, abstractmethod
-from typing import List, Any
+from typing import Any, List
+
 import numpy as np
 import numpy_financial as npf
+
+from noverde_challenge.models.loan import LoanModel
 
 
 class StakeholderBasePolicy(ABC):
@@ -27,6 +30,7 @@ class StakeholderBasePolicy(ABC):
     minimum_amount: float
     maximum_amount: float
     minimum_score: int
+    loan: LoanModel
 
     @classmethod
     @abstractmethod

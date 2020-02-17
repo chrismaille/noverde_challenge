@@ -22,13 +22,15 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
         - dynamodb:DescribeTable
-      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+        - states:StartExecution
+      Resource:
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
   tracing:
     apiGateway: true
     lambda: true
 
 functions:
-  loans_get:
+  GetLoan:
     handler: noverde_challenge/handlers/loan.get
     events:
       - http:
@@ -38,16 +40,79 @@ functions:
           request:
             paths:
               loan_id: true
-  loans_post:
+  CreateLoan:
     handler: noverde_challenge/handlers/loan.post
+    environment:
+      LOAN_ANALYSIS_ARN: ${self:resources.Outputs.LoanAnalysisStateMachine.Value}
     events:
       - http:
           path: api/loans
           method: post
           cors: true
+  RunAgePolicy:
+    handler: noverde_challenge/handlers/analysis.run_age_policy
+  RunScorePolicy:
+    handler: noverde_challenge/handlers/analysis.run_score_policy
+  RunCommitmentPolicy:
+    handler: noverde_challenge/handlers/analysis.run_commitment_policy
+
+stepFunctions:
+  stateMachines:
+    loanAnalysis:
+      name: LoanAnalysisStateMachine
+      type: EXPRESS
+      loggingConfig:
+        level: ALL
+        includeExecutionData: true
+        destinations:
+          - Fn::GetAtt: [LoanAnalysisLogGroup, Arn]
+      definition:
+        StartAt: runAgePolicy
+        States:
+          runAgePolicy:
+            Type: Task
+            Resource:
+              Fn::GetAtt: [RunAgePolicy, Arn]
+            Next: afterAgeChoice
+          afterAgeChoice:
+            Type: Choice
+            Choices:
+              - Variable: "$.status"
+                StringEquals: "completed"
+                Next: finishAnalysis
+            Default: runScorePolicy
+          runScorePolicy:
+            Type: Task
+            Resource:
+              Fn::GetAtt: [RunScorePolicy, Arn]
+            Next: afterScoreChoice
+          afterScoreChoice:
+            Type: Choice
+            Choices:
+              - Variable: "$.status"
+                StringEquals: "completed"
+                Next: finishAnalysis
+            Default: runCommitmentPolicy
+          runCommitmentPolicy:
+            Type: Task
+            Resource:
+              Fn::GetAtt: [RunCommitmentPolicy, Arn]
+            Next: finishAnalysis
+          finishAnalysis:
+            Type: Pass
+            End: true
 
 resources:
+  Outputs:
+    LoanAnalysisStateMachine:
+      Value:
+        Ref: LoanAnalysisStateMachine
   Resources:
+    LoanAnalysisLogGroup:
+      Type: AWS::Logs::LogGroup
+      Properties:
+        LogGroupName: ${self:service}-${opt:stage, self:provider.stage}-loan-analysis-log
+        RetentionInDays: 1
     NoverdeChallengeDB:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -64,9 +129,11 @@ resources:
 
 plugins:
   - serverless-python-requirements
-  - serverless-dynamodb-local
-  - serverless-offline
   - serverless-step-functions
+  - serverless-pseudo-parameters
+  - serverless-dynamodb-local
+  - serverless-step-functions-offline
+  - serverless-offline
 custom:
   dynamodb:
     stages:
@@ -78,3 +145,7 @@ custom:
     usePoetry: false
   serverless-offline:
     noTimeout: true
+  stepFunctionsOffline:
+    runAgePolicy: RunAgePolicy
+    runScorePolicy: RunScorePolicy
+    runCommitmentPolicy: RunCommitmentPolicy

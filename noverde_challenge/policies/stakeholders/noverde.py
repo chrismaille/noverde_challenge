@@ -38,16 +38,20 @@ class NoverdePolicy(StakeholderBasePolicy):
 
     def _request(self, response_field: str) -> Union[str, int, float]:
         url = f"{self.request_base_url}{response_field}"
-        logger.debug(f"Starting request for {url}. Timeout is {self.request_timeout}.")
+        logger.debug(
+            f"[{self.loan.loan_id}] Starting request for {url}. "
+            f"Timeout is {self.request_timeout}."
+        )
         data = {"cpf": self.loan.cpf}
         headers = {
             "Content-Type": "application/json",
             "x-api-key": get_secret("/noverde/api/token"),
         }
         response = requests.post(
-            url, data=data, headers=headers, timeout=self.request_timeout
+            url, json=data, headers=headers, timeout=self.request_timeout
         )
         response.raise_for_status()
+        logger.debug(f"[{self.loan.loan_id}] HTTP Response is: {response.text}")
         return response.json()[response_field]
 
     @classmethod
@@ -72,7 +76,13 @@ class NoverdePolicy(StakeholderBasePolicy):
         :return: Boolean
         """
         days = (arrow.utcnow() - arrow.get(self.loan.birthdate)).days
-        return (days / 365) >= self.minimum_age
+        current_age = int(days / 365)
+        result = current_age >= self.minimum_age
+        logger.debug(
+            f"[{self.loan.loan_id}] Testing Age Policy: "
+            f"{current_age} >= {self.minimum_age} = {result}"
+        )
+        return result
 
     def run_score_policy(self) -> bool:
         """Run Score Policy Rule.
@@ -83,7 +93,12 @@ class NoverdePolicy(StakeholderBasePolicy):
         :return: Boolean
         """
         score = self.request_score()
-        return score >= self.minimum_score
+        result = score >= self.minimum_score
+        logger.debug(
+            f"[{self.loan.loan_id}] Testing Score Policy: "
+            f"{score} >= {self.minimum_score} = {result}"
+        )
+        return result
 
     def run_commitment_policy(self, pmt: float) -> bool:
         """Run Commitment Policy Rule.
@@ -104,7 +119,12 @@ class NoverdePolicy(StakeholderBasePolicy):
         """
         commitment_rate = self.request_commitment()
         commitment_free_value: float = self.loan.income * (1 - commitment_rate)
-        return pmt <= commitment_free_value
+        result = pmt <= commitment_free_value
+        logger.debug(
+            f"[{self.loan.loan_id}] Testing Commitment Policy: "
+            f"PMT {pmt} <= {commitment_free_value} = {result}"
+        )
+        return result
 
     @classmethod
     def run_terms_policy(cls, value: int) -> bool:

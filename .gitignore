@@ -239,4 +239,6 @@ requirements.txt
 
 # Idea
 .idea/
+
 /serverless_sdk/
+test.json
