@@ -1,4 +1,4 @@
-"""Handler Config Decorator."""
+"""Handler View Config Decorator."""
 import json
 from functools import wraps
 from typing import Optional, Type
@@ -11,7 +11,7 @@ from noverde_challenge.utils.status_code import StatusCode
 
 
 def handler_view(model_schema: Optional[Type[Schema]] = None):
-    """Configure Handler Decorator.
+    """Configure Handler View Decorator.
 
     This decorator will config the handler for the following options:
 

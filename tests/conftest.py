@@ -15,5 +15,10 @@ def loan_model():
         "terms": 12,
         "name": "Seu Madruga",
         "income": 3000.00,
+        "status": "processing",
+        "result": None,
+        "refused_policy": None,
+        "allowed_amount": None,
+        "allowed_terms": None,
     }
     return LoanModel(**data)

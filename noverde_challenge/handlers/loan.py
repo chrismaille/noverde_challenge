@@ -6,8 +6,11 @@ from loguru import logger
 from pynamodb.exceptions import DoesNotExist
 
 from noverde_challenge.models.loan import LoanModel
-from noverde_challenge.schemas.loan import CreateLoanModelSchema, LoanModelSchema
-from noverde_challenge.utils.handler import handler_view
+from noverde_challenge.schemas.loan import (
+    CreateLoanModelSchema,
+    RetrieveLoanModelSchema,
+)
+from noverde_challenge.utils.handler_view import handler_view
 from noverde_challenge.utils.status_code import StatusCode
 
 
@@ -30,7 +33,7 @@ def get(event: Dict[str, Any], context: object) -> Dict[str, object]:
             "body": {"errors": [f"LoanId {loan_id} does not found."]},
         }
 
-    loan_response = json.loads(LoanModelSchema().dumps(loan))
+    loan_response = json.loads(RetrieveLoanModelSchema().dumps(loan))
     response = {"statusCode": StatusCode.OK, "body": loan_response}
 
     return response

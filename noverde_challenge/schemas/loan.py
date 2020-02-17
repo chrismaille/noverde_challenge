@@ -39,13 +39,13 @@ class LoanModelSchema(Schema):
         self.policy_class = policy_class
         super().__init__(*args, **kwargs)
 
-    loan_id = fields.UUID(missing=uuid.uuid4)
-    name = fields.String(required=True)
-    cpf = fields.String(required=True)
-    birthdate = fields.String(required=True)
-    amount = fields.Float(required=True)
-    terms = fields.Integer(required=True)
-    income = fields.Float(required=True)
+    loan_id = fields.UUID(missing=uuid.uuid4, data_key="id")
+    name = fields.String(required=True, load_only=True)
+    cpf = fields.String(required=True, load_only=True)
+    birthdate = fields.String(required=True, load_only=True)
+    amount = fields.Float(required=True, load_only=True)
+    terms = fields.Integer(required=True, load_only=True)
+    income = fields.Float(required=True, load_only=True)
 
     @validates("cpf")
     def validate_cpf(self, value: str) -> None:
@@ -90,7 +90,7 @@ class LoanModelSchema(Schema):
     def validate_birthdate(self, value: str) -> None:
         """Validate Birthdate from API request.
 
-        :param value: brithdate value from request.
+        :param value: birthdate value from request.
         :return: None
         :raises: Marshmallow ValidationError
         """
@@ -119,3 +119,13 @@ class CreateLoanModelSchema(LoanModelSchema):
         loan = LoanModel(**data)
         loan.save()
         return loan
+
+
+class RetrieveLoanModelSchema(LoanModelSchema):
+    """Retrieve Loan Model Schema."""
+
+    status = fields.String()
+    result = fields.String()
+    refused_policy = fields.String()
+    allowed_amount = fields.Float(data_key="amount")
+    allowed_terms = fields.Integer(data_key="terms")

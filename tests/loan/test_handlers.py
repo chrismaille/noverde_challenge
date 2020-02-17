@@ -27,13 +27,12 @@ def test_get(loan_model, mocker):
     )
     assert response["statusCode"] == StatusCode.OK.value
     assert json.loads(response["body"]) == {
-        "terms": 12,
-        "name": "Seu Madruga",
-        "cpf": "077.244.260-67",
-        "loan_id": "873649aa-0851-41fe-9a42-6ca6d29ac3d2",
-        "amount": 500.0,
-        "birthdate": "1923-09-02",
-        "income": 3000.0,
+        "amount": None,
+        "id": "873649aa-0851-41fe-9a42-6ca6d29ac3d2",
+        "refused_policy": None,
+        "result": None,
+        "status": "processing",
+        "terms": None,
     }
 
 
