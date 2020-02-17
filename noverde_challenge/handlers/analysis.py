@@ -63,4 +63,4 @@ def run_commitment_policy(
     :return: bool
     """
     logger.info(f"Start Run Commitment Policy for {loan.loan_id}")
-    return False
+    return policy_class(loan=loan).run_commitment_policy()  # type: ignore

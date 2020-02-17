@@ -1,7 +1,9 @@
 """Hello Handlers."""
 import json
+import os
 from typing import Any, Dict
 
+import boto3
 from loguru import logger
 from pynamodb.exceptions import DoesNotExist
 
@@ -50,4 +52,10 @@ def post(event: Dict[str, Any], context: object, loan: LoanModel) -> Dict[str, o
     """
     logger.info(f"Starting Create Loan handler...")
     body = {"id": loan.loan_id}
+
+    client = boto3.client("stepfunctions")
+    client.start_execution(
+        stateMachineArn=os.getenv("LOAN_ANALYSIS_ARN"),
+        input=json.dumps({"loan_id": loan.loan_id}),
+    )
     return {"statusCode": StatusCode.CREATED, "body": body}

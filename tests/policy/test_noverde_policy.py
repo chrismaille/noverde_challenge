@@ -64,16 +64,26 @@ def test_terms_policy(loan_model, value, result):
 
 
 @pytest.mark.parametrize(
-    "value, result", [(800, False), (200, True)], ids=["Good Score", "Bad Score"]
+    "value, result",
+    [(1200, True), (850, True), (600, False), (200, False)],
+    ids=["Above Max Score", "Good Score", "Bad Score", "Below Min Score"],
 )
-def test_commitment_policy(loan_model, value, result, requests_mock):
-    response = {"commitment": 0.8}
+def test_commitment_policy(loan_model, value, result, mocker, test_rate_model):
+    from noverde_challenge.policies.stakeholders.noverde import NoverdePolicy
+    from noverde_challenge.utils.rates import pd
+    from noverde_challenge.models.loan import LoanModel
+
     test_model = deepcopy(loan_model)
-    test_model.income = 3000.00
+    test_model.income = 2000.00
+
+    mocker.patch.object(NoverdePolicy, "request_score", return_value=value)
+    mocker.patch.object(NoverdePolicy, "request_commitment", return_value=0.8)
+    mocker.patch.object(pd, "read_csv", return_value=test_rate_model)
+    mocker.patch.object(LoanModel, "get", return_value=test_model)
+    mocker.patch.object(LoanModel, "save")
+
     policy = NoverdePolicy(loan=test_model)
-    url = f"{policy.request_base_url}commitment"
-    requests_mock.post(url, json=response)
-    assert policy.run_commitment_policy(pmt=value) == result
+    assert policy.run_commitment_policy() == result
 
 
 def test_calculate_pmt():

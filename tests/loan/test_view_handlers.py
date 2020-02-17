@@ -76,6 +76,7 @@ def test_post(mocker):
     mocker.patch.object(LoanModel, "save")
     mocker.patch.object(LoanModel, "exists", return_value=False)
     mocker.patch.object(LoanModel, "create_table")
+    moto = mocker.patch("noverde_challenge.handlers.loan.boto3")
 
     event = {"body": json.dumps(good_dog)}
     response = post(event, {})
@@ -83,6 +84,7 @@ def test_post(mocker):
     response = json.loads(response["body"])
     uuid_value = response["id"]
     assert uuid.UUID(uuid_value)
+    moto.client.assert_called_with("stepfunctions")
 
 
 def test_internal_server_error():

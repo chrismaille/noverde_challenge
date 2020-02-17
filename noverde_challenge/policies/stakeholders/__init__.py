@@ -4,6 +4,8 @@ from typing import Any, List
 
 import numpy as np
 import numpy_financial as npf
+import pandas
+from loguru import logger
 
 from noverde_challenge.models.loan import LoanModel
 
@@ -49,7 +51,7 @@ class StakeholderBasePolicy(ABC):
         pass
 
     @abstractmethod
-    def run_commitment_policy(self, pmt: float) -> bool:
+    def run_commitment_policy(self) -> bool:
         """Run Commitment Policy as per Stakeholder rules."""
         pass
 
@@ -70,11 +72,23 @@ class StakeholderBasePolicy(ABC):
         :param number_period: Loan Instalments
         :return: float
         """
+        logger.info(
+            f"Calculating PMT Using: "
+            f"Present Value: {present_value}, "
+            f"Terms: {number_period}, Interest Rate: {rate_interest}"
+        )
         pmt = npf.pmt(rate=rate_interest, nper=number_period, pv=present_value)
-        return np.round(pmt, decimals=2) * -1
+        pmt = np.round(pmt, decimals=2) * -1
+        logger.debug(f"PMT is {pmt}")
+        return pmt
 
     @classmethod
     @abstractmethod
     def run_terms_policy(cls, value: int) -> bool:
         """Run Terms Policy as per Stakeholder rules."""
+        pass
+
+    @abstractmethod
+    def get_available_rates(self, score: int, min_term: int) -> pandas.Series:
+        """Get Available Rates as per Stakeholder rules."""
         pass

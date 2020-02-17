@@ -3,11 +3,18 @@ from dataclasses import dataclass, field
 from typing import Dict, Union
 
 import arrow
+import numpy as np
+import pandas
 import requests
 from loguru import logger
 
-from noverde_challenge.models.loan import LoanModel
+from noverde_challenge.models.loan import (
+    LoanAnalysisResult,
+    LoanAnalysisStatus,
+    LoanModel,
+)
 from noverde_challenge.policies.stakeholders import StakeholderBasePolicy
+from noverde_challenge.utils.rates import get_rates
 from noverde_challenge.utils.secrets import get_secret
 
 
@@ -100,7 +107,7 @@ class NoverdePolicy(StakeholderBasePolicy):
         )
         return result
 
-    def run_commitment_policy(self, pmt: float) -> bool:
+    def run_commitment_policy(self) -> bool:
         """Run Commitment Policy Rule.
 
         Current Rule:
@@ -114,16 +121,58 @@ class NoverdePolicy(StakeholderBasePolicy):
             PMT 150.00 <= CFV 200.00 -> True
             PMT 400.00 <= CFV 200.00 -> False
 
-        :param pmt: calculated PMT for Borrower
         :return: Boolean
         """
+        # Get Commitment
         commitment_rate = self.request_commitment()
-        commitment_free_value: float = self.loan.income * (1 - commitment_rate)
-        result = pmt <= commitment_free_value
+        logger.debug(f"Borrower commitment rate is {commitment_rate}")
+
+        # Get Score
+        borrower_score = self.request_score()
+        logger.debug(f"Borrower score is {borrower_score}")
+
+        # Get CFV
         logger.debug(
-            f"[{self.loan.loan_id}] Testing Commitment Policy: "
-            f"PMT {pmt} <= {commitment_free_value} = {result}"
+            f"Calculating CFV using: Income: {self.loan.income}, "
+            f"Commitment Rate: {commitment_rate}"
         )
+        commitment_free_value: float = np.round(
+            self.loan.income * (1 - commitment_rate), decimals=2
+        )
+        logger.debug(f"CFV is {commitment_free_value}")
+
+        # Get Available Rates
+        available_rates = self.get_available_rates(borrower_score, int(self.loan.terms))
+        verbose_rates = [
+            f"Term: {term}, Rate: {available_rates[term]}"
+            for term in available_rates.keys()
+        ]
+        logger.info(f"Available rates are: {verbose_rates}")
+
+        result = False
+        for number_period in available_rates.keys():
+            # Calculate PMT
+            present_value = self.loan.amount
+            rate_interest = available_rates[number_period]
+            pmt = self.calculate_pmt(present_value, rate_interest, int(number_period))
+
+            # Test Policy
+            result = pmt <= commitment_free_value
+            logger.debug(
+                f"[{self.loan.loan_id}] Testing Commitment Policy: "
+                f"PMT {pmt} <= CFV {commitment_free_value} = {result}"
+            )
+
+            # Update Loan if approved
+            if result:
+                self.loan.allowed_amount = pmt
+                self.loan.allowed_terms = int(number_period)
+                self.loan.status = LoanAnalysisStatus.COMPLETED.value
+                self.loan.result = LoanAnalysisResult.APPROVED.value
+                self.loan.save()
+                logger.info(f"[{self.loan.loan_id}] is APPROVED")
+                break
+
         return result
 
     @classmethod
@@ -137,3 +186,23 @@ class NoverdePolicy(StakeholderBasePolicy):
         :return: Boolean
         """
         return value in cls.valid_terms
+
+    def get_available_rates(self, score: int, min_term: int) -> pandas.Series:
+        """Get Current Available Rates.
+
+        Current Rate Model can retrieved from
+        CSV files in S3 buckets, State Machine requests,
+        API requests, Database, etc...
+
+        For this challenge, we will use a local CSV file.
+
+        :param score: Borrower score
+        :param min_term: Borrower selected term
+        :return: Series
+        """
+        return get_rates(
+            score=score,
+            min_term=min_term,
+            valid_terms=self.valid_terms,
+            csv="noverde_rate_model",
+        )

@@ -63,19 +63,54 @@ def test_run_score_policy(
 
 
 @pytest.mark.parametrize(
-    "commitment, expected_status, expected_result",
-    [(0.95, LoanAnalysisStatus.COMPLETED.value, LoanAnalysisResult.REFUSED.value)],
-    ids=["Commitment: 95%"],
+    "commitment, expected_terms, expected_status, expected_result",
+    [
+        (
+            0.99,
+            None,
+            LoanAnalysisStatus.COMPLETED.value,
+            LoanAnalysisResult.REFUSED.value,
+        ),
+        (
+            0.50,
+            9,
+            LoanAnalysisStatus.COMPLETED.value,
+            LoanAnalysisResult.APPROVED.value,
+        ),
+        (
+            0.70,
+            12,
+            LoanAnalysisStatus.COMPLETED.value,
+            LoanAnalysisResult.APPROVED.value,
+        ),
+    ],
+    ids=[
+        "Commitment: 99% - Denied",
+        "Commitment: 50% - Approve 9 months",
+        "Commitment: 93% - Counteroffer 12 months",
+    ],
 )
 def test_run_commitment_policy(
-    loan_model, mocker, commitment, expected_result, expected_status, requests_mock
+    loan_model,
+    mocker,
+    commitment,
+    expected_terms,
+    expected_result,
+    expected_status,
+    test_rate_model,
 ):
-    response = {"commitment": commitment}
-    url = f"{NoverdePolicy.request_base_url}commitment"
-    requests_mock.post(url, json=response)
-
-    mocker.patch.object(LoanModel, "get", return_value=loan_model)
+    test_loan = deepcopy(loan_model)
+    mocker.patch.object(LoanModel, "get", return_value=test_loan)
     mocker.patch.object(LoanModel, "save")
+
+    from noverde_challenge.policies.stakeholders.noverde import NoverdePolicy
+
+    mocker.patch.object(NoverdePolicy, "request_score", return_value=600)
+    mocker.patch.object(NoverdePolicy, "request_commitment", return_value=commitment)
+
+    from noverde_challenge.utils.rates import pd
+
+    mocker.patch.object(pd, "read_csv", return_value=test_rate_model)
 
     event = {"loan_id": loan_model.loan_id}
     ret = run_commitment_policy(event, {})
@@ -84,3 +119,4 @@ def test_run_commitment_policy(
         "status": expected_status,
         "result": expected_result,
     }
+    assert test_loan.allowed_terms == expected_terms

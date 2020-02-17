@@ -62,6 +62,7 @@ def handler_task(refused_policy: LoanRefusedPolicy):
                     loan.refused_policy = refused_policy.value
                     loan.result = LoanAnalysisResult.REFUSED.value
                     loan.save()
+                    logger.info(f"[{loan.loan_id}] Loan is DENIED")
 
                 # Return data
                 return {
