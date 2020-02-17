@@ -69,7 +69,7 @@ plugins:
 custom:
   dynamodb:
     stages:
-      - develop
+      - dev
     start:
       migrate: true
   pythonRequirements:

@@ -30,5 +30,4 @@ class LoanModel(Model):
     class Meta:
         """Schema Meta class."""
 
-        table_name = os.getenv("DYNAMODB_TABLE", "noverdechallenge-dev")
-        host = "http://localhost:8000"
+        table_name = os.getenv("DYNAMODB_TABLE")
