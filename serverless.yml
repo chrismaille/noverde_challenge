@@ -25,6 +25,7 @@ provider:
         - states:StartExecution
       Resource:
         - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+        - "*"
   tracing:
     apiGateway: true
     lambda: true
