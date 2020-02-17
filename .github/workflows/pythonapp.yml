@@ -1,12 +1,14 @@
 name: Test Project
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+      - develop
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 3.7
@@ -15,18 +17,19 @@ jobs:
           python-version: 3.7
       - name: Setup Poetry
         uses: Gr1N/setup-poetry@v1
-      - name: Run node dependencies
+      - name: Install Node dependencies
         run: |
           npm install
-      - name: GitHub Action for Serverless Framework
-        uses: aaronpanch/action-serverless@v1.0.0
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
           make install
       - name: Run CI Tests
         run: |
           make ci
-      - name: Serverless
+      - name: Prepare Deploy
+        run: |
+          make serverless_pre_install
+      - name: Deploy Serverless
         uses: serverless/github-action@v1.53.0
         with:
           args: deploy
