@@ -18,9 +18,7 @@ Install
 
 .. code-block:: bash
 
-	cd /path/to/NoverdeChallenge
-	virtualenv venv --python==python3.7
-	source venv/bin/activate
+	cd /path/to/noverde_challenge
 	poetry install
 
 Alternative, on Linux/MacOS, you can type :bash:`make pre_install`, open a new terminal and type :bash:`make install`.
