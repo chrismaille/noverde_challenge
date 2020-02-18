@@ -23,34 +23,8 @@
 * AWS X-Ray
 
 #### Workflow
-```mermaid
-sequenceDiagram
-participant C as Client
-participant A as AWS API Gateway
-participant DB as DynamoDB
-participant SM as AWS Step Functions
-participant B as Backend
-C ->> A: POST /api/loans
-A ->> DB: Save new Loan
-A ->> C: Return Loan Id
-A -->> SM: Start Execution
-Note over DB,B: Run Age Policy 
-alt Policy denied
-SM ->> DB: Update Loan
-end
-Note over DB,B: Run Score Policy 
-SM ->> B: Get Score
-alt Policy denied
-SM ->> DB: Update Loan
-end
-Note over DB,B: Run Commitment Policy 
-SM ->> B: Get Score
-SM ->> B: Get Commitment
-SM ->> DB: Update Loan
-C -->> A: GET /api/loans/:id
-A -->> DB: Get Loan
-A -->> C: Return Loan status
-```
+[![](https://mermaid.ink/img/eyJjb2RlIjoic2VxdWVuY2VEaWFncmFtXG5wYXJ0aWNpcGFudCBDIGFzIENsaWVudFxucGFydGljaXBhbnQgQSBhcyBBV1MgQVBJIEdhdGV3YXlcbnBhcnRpY2lwYW50IERCIGFzIER5bmFtb0RCXG5wYXJ0aWNpcGFudCBTTSBhcyBBV1MgU3RlcCBGdW5jdGlvbnNcbnBhcnRpY2lwYW50IEIgYXMgQmFja2VuZFxuQyAtPj4gQTogUE9TVCAvYXBpL2xvYW5zXG5BIC0-PiBEQjogU2F2ZSBuZXcgTG9hblxuQSAtPj4gQzogUmV0dXJuIExvYW4gSWRcbkEgLS0-PiBTTTogU3RhcnQgRXhlY3V0aW9uXG5Ob3RlIG92ZXIgREIsQjogUnVuIEFnZSBQb2xpY3kgXG5hbHQgUG9saWN5IGRlbmllZFxuU00gLT4-IERCOiBVcGRhdGUgTG9hblxuZW5kXG5Ob3RlIG92ZXIgREIsQjogUnVuIFNjb3JlIFBvbGljeSBcblNNIC0-PiBCOiBHZXQgU2NvcmVcbmFsdCBQb2xpY3kgZGVuaWVkXG5TTSAtPj4gREI6IFVwZGF0ZSBMb2FuXG5lbmRcbk5vdGUgb3ZlciBEQixCOiBSdW4gQ29tbWl0bWVudCBQb2xpY3kgXG5TTSAtPj4gQjogR2V0IFNjb3JlXG5TTSAtPj4gQjogR2V0IENvbW1pdG1lbnRcblNNIC0-PiBEQjogVXBkYXRlIExvYW5cbkMgLS0-PiBBOiBHRVQgL2FwaS9sb2Fucy86aWRcbkEgLS0-PiBEQjogR2V0IExvYW5cbkEgLS0-PiBDOiBSZXR1cm4gTG9hbiBzdGF0dXMiLCJtZXJtYWlkIjp7InRoZW1lIjoiZGVmYXVsdCJ9LCJ1cGRhdGVFZGl0b3IiOmZhbHNlfQ)](https://mermaid-js.github.io/mermaid-live-editor/#/edit/eyJjb2RlIjoic2VxdWVuY2VEaWFncmFtXG5wYXJ0aWNpcGFudCBDIGFzIENsaWVudFxucGFydGljaXBhbnQgQSBhcyBBV1MgQVBJIEdhdGV3YXlcbnBhcnRpY2lwYW50IERCIGFzIER5bmFtb0RCXG5wYXJ0aWNpcGFudCBTTSBhcyBBV1MgU3RlcCBGdW5jdGlvbnNcbnBhcnRpY2lwYW50IEIgYXMgQmFja2VuZFxuQyAtPj4gQTogUE9TVCAvYXBpL2xvYW5zXG5BIC0-PiBEQjogU2F2ZSBuZXcgTG9hblxuQSAtPj4gQzogUmV0dXJuIExvYW4gSWRcbkEgLS0-PiBTTTogU3RhcnQgRXhlY3V0aW9uXG5Ob3RlIG92ZXIgREIsQjogUnVuIEFnZSBQb2xpY3kgXG5hbHQgUG9saWN5IGRlbmllZFxuU00gLT4-IERCOiBVcGRhdGUgTG9hblxuZW5kXG5Ob3RlIG92ZXIgREIsQjogUnVuIFNjb3JlIFBvbGljeSBcblNNIC0-PiBCOiBHZXQgU2NvcmVcbmFsdCBQb2xpY3kgZGVuaWVkXG5TTSAtPj4gREI6IFVwZGF0ZSBMb2FuXG5lbmRcbk5vdGUgb3ZlciBEQixCOiBSdW4gQ29tbWl0bWVudCBQb2xpY3kgXG5TTSAtPj4gQjogR2V0IFNjb3JlXG5TTSAtPj4gQjogR2V0IENvbW1pdG1lbnRcblNNIC0-PiBEQjogVXBkYXRlIExvYW5cbkMgLS0-PiBBOiBHRVQgL2FwaS9sb2Fucy86aWRcbkEgLS0-PiBEQjogR2V0IExvYW5cbkEgLS0-PiBDOiBSZXR1cm4gTG9hbiBzdGF0dXMiLCJtZXJtYWlkIjp7InRoZW1lIjoiZGVmYXVsdCJ9LCJ1cGRhdGVFZGl0b3IiOmZhbHNlfQ)
+
 ### Install
 ##### 1. Install Prerequisites
 * Python 3.7: [https://www.python.org/downloads/](). We recommend using
