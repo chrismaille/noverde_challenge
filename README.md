@@ -72,6 +72,7 @@ To test without install/config the project please use the following link:
 * POST [https://e3sd2t641g.execute-api.us-east-1.amazonaws.com/dev/api/loans]()
 * GET [https://e3sd2t641g.execute-api.us-east-1.amazonaws.com/dev/api/loans/{loan_id}]()
 
+### Postman
 A postman collection can be found [here](https://www.getpostman.com/collections/48f4195a121fc89a11e2)
 
 ### Not working?
